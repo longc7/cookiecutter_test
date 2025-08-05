@@ -1,0 +1,3 @@
+# This file references pyproject.toml for dependency management
+# Install with: pip install -r requirements.txt
+-e .

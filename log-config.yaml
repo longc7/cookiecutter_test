@@ -1,0 +1,42 @@
+version: 1
+disable_existing_loggers: true
+
+formatters:
+  simple:
+    format: "%(asctime)s %(levelname)-8s [%(filename)s %(lineno)d] : %(message)s"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: simple
+    stream: ext://sys.stdout
+
+  logfile:
+    class: logging.FileHandler
+    filename: test.log
+    formatter: simple
+    level: INFO
+
+  gelf:
+    class: pygelf.GelfTcpHandler
+    host: vulogs.app.vanderbilt.edu
+    port: 4545
+    level: INFO
+    additional_env_fields:
+      environment: APP_ENV
+    include_extra_fields: true
+    # Dynamic application metadata
+    _appName: test
+    _appType: batch
+    _facility: Hill
+
+loggers:
+  test:
+    level: INFO
+    handlers: [console, logfile, gelf]
+    propagate: no
+
+  root:
+    level: ERROR
+    handlers: [console, logfile, gelf]

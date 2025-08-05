@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run main.py",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/python/main.py",
+      "args": [
+        "--env=dev",
+        "--team=acad"
+      ],
+      "console": "integratedTerminal",
+      "noDebug": true
+    },
+    {
+      "name": "Debug main.py",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/python/main.py",
+      "args": [
+        "--env=dev",
+        "--team=acad"
+      ],
+      "console": "integratedTerminal"
+    }
+  ]
+}

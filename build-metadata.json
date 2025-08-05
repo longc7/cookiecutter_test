@@ -1,0 +1,12 @@
+{
+  "artifactId": "test",
+  "gitUrl": "https://github.com/longc7/cookiecutter_tes.git",
+  "docker_url": "docker.devops.app.vanderbilt.edu/vuit-admin/test",
+  "major": 1,
+  "minor": 0,
+  "patch": 0,
+  "buildNumber": 1,
+  "metadata": {
+    "updatedBy": ""
+  }
+}

@@ -1,0 +1,18 @@
+
+name: Integration Tests
+on:
+  workflow_dispatch:
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Integration Tests
+        uses: The-Vanderbilt-University/vuit-python-test-action@latest-release
+        with:
+          python-version: "3.10"
+          test-folder: src/test/int
+          pypi-index: ${{ secrets.VUIT_PYPI_INDEX }}
+          repo-user: ${{ vars.VUIT_ARTIFACT_REPO_USER }}
+          repo-pw: ${{ secrets.VUIT_ARTIFACT_REPO_PW }}
+

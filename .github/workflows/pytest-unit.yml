@@ -1,0 +1,30 @@
+
+name: Unit Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11"]
+
+    steps:
+      - name: Tests using python ${{ matrix.python-version }}
+        uses: The-Vanderbilt-University/vuit-python-test-action@latest-release
+        with:
+          python-version: ${{ matrix.python-version }}
+          test-folder: src/test/unit
+          pypi-index: ${{ secrets.VUIT_PYPI_INDEX }}
+          repo-user: ${{ vars.VUIT_ARTIFACT_REPO_USER }}
+          repo-pw: ${{ secrets.VUIT_ARTIFACT_REPO_PW }}
+          coverage: true
+          coverage-source: src/python
+

@@ -1,0 +1,53 @@
+
+name: Release
+run-name: Release ${{ inputs.release_mode }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_mode:
+        type: choice
+        description: Release Type
+        options:
+          - snapshot
+          - release-candidate
+          - finalize
+      skip_coverage_check:
+        type: boolean
+        description: Skip coverage requirement (snapshots only)
+        default: false
+jobs:
+  coverage-check:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.release_mode != 'snapshot' || !inputs.skip_coverage_check }}
+    steps:
+      - name: Coverage check for release
+        uses: The-Vanderbilt-University/vuit-python-test-action@latest-release
+        with:
+          python-version: "3.10"
+          test-folder: src/test
+          pypi-index: ${{ secrets.VUIT_PYPI_INDEX }}
+          repo-user: ${{ vars.VUIT_ARTIFACT_REPO_USER }}
+          repo-pw: ${{ secrets.VUIT_ARTIFACT_REPO_PW }}
+          coverage: true
+          coverage-source: src/python
+          coverage-fail-under: 90
+  release:
+    needs: [coverage-check]
+    if: ${{ always() && (needs.coverage-check.result == 'success' || needs.coverage-check.result == 'skipped') }}
+    runs-on: vuit-dind
+    permissions:
+      contents: write
+
+    name: Release - ${{ inputs.release_mode }}
+    steps:
+      - name: Release - ${{ inputs.release_mode }}
+        uses: The-Vanderbilt-University/vuit-docker-release-action@latest-release
+        with:
+          vuit_artifact_repo_user: ${{ vars.VUIT_ARTIFACT_REPO_USER }}
+          vuit_artifact_repo_pw: ${{ secrets.VUIT_ARTIFACT_REPO_PW }}
+          release_mode: ${{ inputs.release_mode }}
+          action_token: ${{ secrets.VUIT_ACTION_TOKEN }}
+        env:
+          DOCKER_ARGS_PYPI_INDEX: ${{ secrets.VUIT_PYPI_INDEX }}
+
